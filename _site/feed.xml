@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Your awesome title</title>
+    <description>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
+</description>
+    <link>http://yourdomain.com/</link>
+    <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Sun, 19 Oct 2014 22:45:48 -0200</pubDate>
+    <lastBuildDate>Sun, 19 Oct 2014 22:45:48 -0200</lastBuildDate>
+    <generator>Jekyll v2.4.0</generator>
+    
+      <item>
+        <title>Building and installing lxml with PyPy</title>
+        <description>&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;The major issue my colleagues and I found when we started running some projects with &lt;a href=&quot;http://pypy.org/&quot;&gt;PyPy&lt;/a&gt; was the
+&lt;a href=&quot;https://pypi.python.org/pypi/lxml/3.2.3&quot;&gt;lxml&lt;/a&gt; library. It uses &lt;a href=&quot;http://docs.cython.org/src/quickstart/overview.html&quot;&gt;Cython&lt;/a&gt;,
+which can run with PyPy if you write your code &lt;a href=&quot;http://docs.cython.org/src/userguide/pypy.html&quot;&gt;portably enough&lt;/a&gt;.
+So an effort began to port lxml to use &lt;a href=&quot;https://cffi.readthedocs.org/en/release-0.7/&quot;&gt;CFFI&lt;/a&gt;. This effort can be found
+on &lt;a href=&quot;https://github.com/amauryfa/lxml&quot;&gt;this fork&lt;/a&gt; and this is the code we’re going to install from.&lt;/p&gt;
+
+&lt;h2 id=&quot;resolving-dependencies&quot;&gt;Resolving dependencies&lt;/h2&gt;
+
+&lt;p&gt;We are going to install lxml on a ubuntu 13.04, be warned that installation in OSX might give you serious headaches (&amp;lt;10.8). Start by running the following apt-get:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo apt-get install libxml2 libxslt1-dev zlib1g-dev&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;These packages are needed to build lxml (with Python or PyPy).&lt;/p&gt;
+
+&lt;h2 id=&quot;bootstraping-your-environment&quot;&gt;Bootstraping your environment&lt;/h2&gt;
+
+&lt;p&gt;You’ll need to have PyPy’s binary to build lxml with, you can folow Andrews Medina’s guide to install it (but it’s in portuguese…)&lt;/p&gt;
+
+&lt;p&gt;Assuming you have it installed let’s create a virtual environment (with virtualenv and virtualenvwrapper) to install lxml in:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mkvirtualenv lxml-pypy -p /path/to/pypy/bin/pypy&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Now clone the lxml fork and checkout to the CFFI branch:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git clone https://github.com/amauryfa/lxml.git
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;lxml
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git checkout origin/cffi&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Now build and install (double check if you’re in the right virtual environment):&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;python setup.py build
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;python setup.py install&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Done!&lt;/p&gt;
+</description>
+        <pubDate>Thu, 19 Sep 2013 00:00:00 -0300</pubDate>
+        <link>http://yourdomain.com/pypy/python/2013/09/19/building-and-stalling-lxml-with-pypy.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/pypy/python/2013/09/19/building-and-stalling-lxml-with-pypy.html</guid>
+        
+        
+        <category>pypy</category>
+        
+        <category>python</category>
+        
+      </item>
+    
+  </channel>
+</rss>
