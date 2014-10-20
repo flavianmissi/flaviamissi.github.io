@@ -6,8 +6,8 @@
 </description>
     <link>http://yourdomain.com/</link>
     <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Sun, 19 Oct 2014 22:56:03 -0200</pubDate>
-    <lastBuildDate>Sun, 19 Oct 2014 22:56:03 -0200</lastBuildDate>
+    <pubDate>Sun, 19 Oct 2014 23:59:43 -0200</pubDate>
+    <lastBuildDate>Sun, 19 Oct 2014 23:59:43 -0200</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
     
       <item>
@@ -56,6 +56,158 @@ on &lt;a href=&quot;https://github.com/amauryfa/lxml&quot;&gt;this fork&lt;/a&gt
         <category>pypy</category>
         
         <category>python</category>
+        
+      </item>
+    
+      <item>
+        <title>The proc filesystem</title>
+        <description>&lt;h2 id=&quot;intro&quot;&gt;Intro&lt;/h2&gt;
+
+&lt;p&gt;If you use tools such as &lt;em&gt;ps&lt;/em&gt; and &lt;em&gt;top&lt;/em&gt; then you are already using the proc filesystem even though you never actually ran an &lt;em&gt;ls&lt;/em&gt; or opened a file belonging to it. The reason for that is that these tools make use of this filesystem to collect information about processes, and this what this filesystem is for – &lt;em&gt;to store informations about processes&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;But what exactly is the proc filesystem?&lt;/p&gt;
+
+&lt;p&gt;The proc filesystem is actually a pseudo filesystem used as an interface to access kernel data structures. It’s mostly informative and read-only, but you can actually configure some stuff there.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-kind-of-informations-does-proc-stores&quot;&gt;What kind of informations does /proc stores?&lt;/h2&gt;
+
+&lt;p&gt;Lets take a look at the filesystem structure to understand what exactly it stores. The following is the result of a &lt;em&gt;ls&lt;/em&gt; inside /proc&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&amp;gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ls -l
+dr-xr-xr-x  &lt;span class=&quot;m&quot;&gt;9&lt;/span&gt; root    root    1
+dr-xr-xr-x  &lt;span class=&quot;m&quot;&gt;9&lt;/span&gt; root    root    10
+&lt;span class=&quot;c&quot;&gt;# ... omitted output&lt;/span&gt;
+dr-xr-xr-x  &lt;span class=&quot;m&quot;&gt;9&lt;/span&gt; root    root    9910
+dr-xr-xr-x  &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; root    root    acpi
+dr-xr-xr-x  &lt;span class=&quot;m&quot;&gt;4&lt;/span&gt; root    root    asound
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root    buddyinfo
+dr-xr-xr-x  &lt;span class=&quot;m&quot;&gt;4&lt;/span&gt; root    root    bus
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root    cgroups
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root    cmdline
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root    consoles
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root    cpuinfo
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root    crypto
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root    devices
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root    diskstats
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root    dma
+dr-xr-xr-x  &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; root    root    driver
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root    execdomains
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root    fb
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root    filesystems
+dr-xr-xr-x  &lt;span class=&quot;m&quot;&gt;8&lt;/span&gt; root    root    fs
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root    interrupts
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root    iomem&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Let’s make sense of it: the numbers are directories named by its processes IDs, these directories contains informations of the process it refers, such as the command the process is executing, the command line of the process, the process environment variables, memory mapping information such as libraries that are being used and much more.&lt;/p&gt;
+
+&lt;p&gt;It’s worth to note that some of these files’ contents may be null-separated, you can use &lt;em&gt;cat&lt;/em&gt; with &lt;em&gt;tr&lt;/em&gt; to replace them, e.g.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;cat 1/environ &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; tr &lt;span class=&quot;s2&quot;&gt;&amp;quot;\000&amp;quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;\n&amp;quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Now lets run a &lt;em&gt;ls&lt;/em&gt; on the &lt;em&gt;/proc/1&lt;/em&gt; directory, this &lt;em&gt;pid&lt;/em&gt; always refers to the &lt;em&gt;init&lt;/em&gt; process:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&amp;gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ls -ltr
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   cmdline
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   status
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   stat
+lrwxrwxrwx  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   exe -&amp;gt; /sbin/init
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   limits
+lrwxrwxrwx  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   root -&amp;gt; /
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   wchan
+dr-xr-xr-x  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; root    root   task
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   syscall
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   statm
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   stack
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   smaps
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   sessionid
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   schedstat
+-rw-r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   sched
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   personality
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   pagemap
+-rw-r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   oom_score_adj
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   oom_score
+-rw-r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   oom_adj
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   numa_maps
+dr-x--x--x  &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; root    root   ns
+dr-xr-xr-x  &lt;span class=&quot;m&quot;&gt;5&lt;/span&gt; root    root   net
+-r--------  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   mountstats
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   mounts
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   mountinfo
+-rw-------  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   mem
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   maps
+dr-x------  &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; root    root   map_files
+-rw-r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   loginuid
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   latency
+-r--------  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   io
+dr-x------  &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; root    root   fdinfo
+dr-x------  &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; root    root   fd
+-r--------  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   environ
+lrwxrwxrwx  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   cwd -&amp;gt; /
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   cpuset
+-rw-r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   coredump_filter
+-rw-r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   comm
+--w-------  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   clear_refs
+-r--r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   cgroup
+-r--------  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   auxv
+-rw-r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; root    root   autogroup
+dr-xr-xr-x  &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; root    root   attr&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;I’ll cover only the most important files, some of their content you’ll find in process management commands output as I said before, such as &lt;em&gt;ps&lt;/em&gt;, others you’ll only find if you come into this directory.&lt;/p&gt;
+
+&lt;h2 id=&quot;procpidtask&quot;&gt;/proc/[pid]/task/&lt;/h2&gt;
+
+&lt;p&gt;This directory contains all threads in the process, one subdirectory per thread. They are named with the id of the thread (&lt;em&gt;tid&lt;/em&gt;). Within this subdirectory there is basically the same structure as the one in &lt;em&gt;/proc/[pid]&lt;/em&gt;, for shared attributes the file contents are the same, for distinct attributes the corresponding files may have different values (e.g. &lt;em&gt;/proc/[id]/[tid]/status&lt;/em&gt;)&lt;/p&gt;
+
+&lt;h2 id=&quot;procpidstatus&quot;&gt;/proc/[pid]/status&lt;/h2&gt;
+
+&lt;p&gt;Provides same information as the &lt;em&gt;/proc/[pid]/stat&lt;/em&gt; and &lt;em&gt;/proc/[pid]/statm&lt;/em&gt; formated for humans.&lt;/p&gt;
+
+&lt;p&gt;This file gives informations about the process (&lt;em&gt;/proc/[pid]/stat&lt;/em&gt;) and it’s used by the ps command and also provides information about memory usage (&lt;em&gt;/proc/[pid]/statm&lt;/em&gt;)&lt;/p&gt;
+
+&lt;p&gt;For information about the columns and fields see the proc manual page.&lt;/p&gt;
+
+&lt;h2 id=&quot;procpidroot&quot;&gt;/proc/[pid]/root&lt;/h2&gt;
+
+&lt;p&gt;This file is a symbolic link that points to the process’s root directory. Its existence makes container virtualization techniques possible, tools such as &lt;em&gt;chroot&lt;/em&gt; make use of it. See the &lt;em&gt;chroot(2)&lt;/em&gt; manual for more information.&lt;/p&gt;
+
+&lt;h2 id=&quot;procpidns&quot;&gt;/proc/[pid]/ns/&lt;/h2&gt;
+
+&lt;p&gt;Subdirectory containing one entry for each namespace that supports being manipulated by setns, if you’re curious and enjoy some black magic, take a look at the manuals of clone and setns.&lt;/p&gt;
+
+&lt;h2 id=&quot;procpidcoredumpfilter&quot;&gt;/proc/[pid]/coredump_filter&lt;/h2&gt;
+
+&lt;p&gt;Through this file you can control which memory segments are written to the core dump file when one is performed for the corresponding process. For more information see &lt;em&gt;core(5)&lt;/em&gt; manual page.&lt;/p&gt;
+
+&lt;h2 id=&quot;procpidcmdline&quot;&gt;/proc/[pid]/cmdline&lt;/h2&gt;
+
+&lt;p&gt;This file holds the complete command line for the process, unless its a zombie, in the case of walkers, this file will be empty.&lt;/p&gt;
+
+&lt;h2 id=&quot;procpidcwd&quot;&gt;/proc/[pid]/cwd&lt;/h2&gt;
+
+&lt;p&gt;Symbolic link to the current working directory of the process. For instance, if you want to find the current working process for a process, run:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&amp;gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /proc/20/cwd&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; /bin/pwd&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;procpidenviron&quot;&gt;/proc/[pid]/environ&lt;/h2&gt;
+
+&lt;p&gt;This file contains the environment variables for the process, null-separated.&lt;/p&gt;
+
+&lt;h2 id=&quot;procpidexe&quot;&gt;/proc/[pid]/exe&lt;/h2&gt;
+
+&lt;p&gt;This file is a symbolic link containing the pathname of the executed command.&lt;/p&gt;
+
+&lt;p&gt;These are some of the files that I find important or just curious under &lt;em&gt;/proc/[pid]/&lt;/em&gt; and I might have forgotten some of them, if you think I did, don’t hesitate to tell me so!&lt;/p&gt;
+
+&lt;p&gt;Also, as you might have noticed I simply didn’t addressed the files right under &lt;em&gt;/proc&lt;/em&gt;. That’s because I see the information they carry as more important than the former – this is because of my programming background and day-to-day issues. That’s why I am leaving the job to cover those with the manuals (which, BTW, covers the topic very well). use &lt;em&gt;$ man proc&lt;/em&gt; to get a complete explanation on what information each file can give you and &lt;em&gt;$ man /proc/filename&lt;/em&gt; for more information about a specific file.&lt;/p&gt;
+</description>
+        <pubDate>Mon, 15 Jul 2013 00:00:00 -0300</pubDate>
+        <link>http://yourdomain.com/linux/processes/2013/07/15/the-proc-filesystem.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/linux/processes/2013/07/15/the-proc-filesystem.html</guid>
+        
+        
+        <category>linux</category>
+        
+        <category>processes</category>
         
       </item>
     
