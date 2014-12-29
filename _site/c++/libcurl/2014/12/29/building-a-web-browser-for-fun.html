@@ -82,20 +82,19 @@ read the <a href="http://curl.haxx.se/libcurl/c/libcurl-tutorial.html">libcurl t
 <p>Perform a request:</p>
 
 <p>```
-curl_global_init(CURL_GLOBAL_ALL);</p>
+    curl_global_init(CURL_GLOBAL_ALL);</p>
 
-<p>CURL *handle = curl_easy_init();</p>
+<pre><code>CURL *handle = curl_easy_init();
 
-<pre><code>curl_easy_setopt(handle, CURLOPT_URL, "http://flaviamissi.com.br");
+curl_easy_setopt(handle, CURLOPT_URL, "http://flaviamissi.com.br");
 curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, 1L);
 
 CURLcode resp = curl_easy_perform(handle);
 if(resp != CURLE_OK)
     std::cerr &lt;&lt; "curl_easy_perform() failed: " &lt;&lt; curl_easy_strerror(resp) &lt;&lt; std::endl;
-</code></pre>
 
-<p>curl_global_cleanup();
-```</p>
+curl_global_cleanup(); ```
+</code></pre>
 
 <p>You can check the complete code on my <a href="https://github.com/flaviamissi/webbrowser-experiment/blob/cc7b2e5a0bea22157707a0636af38a45bac1f999/main.cpp">github repository</a>.</p>
 
@@ -122,77 +121,77 @@ problems, giving my almost nothing else to do.</p>
 the opposite, I’m going to use my own approach here.
 Starting simple, let’s colour all links to blue:</p>
 
-<p><code>
-std::string blue = "\33\[34m";
-std::size_t pos = html.find("&lt;a&gt;");
-if (pos != std::string::npos) {
-    html.replace(pos, 3, blue);
-    pos = html.find("&lt;/a&gt;");
-    html.replace(pos, 4, "");
-}
+<p><code>C++
+    std::string blue = "\33\[34m";
+    std::size_t pos = html.find("&lt;a&gt;");
+    if (pos != std::string::npos) {
+        html.replace(pos, 3, blue);
+        pos = html.find("&lt;/a&gt;");
+        html.replace(pos, 4, "");
+    }
 </code></p>
 
 <p>This is a very simple case that just works when the tag has no attributes, not very useful huh?
 We need to generalize this, so let’s create a map to keep all tags and its closing tags too.</p>
 
 <p><code>
-std::map&lt;std::string,std::string&gt; html_tags = {
-    {"&lt;!DOCTYPE", ""},
-    {"&lt;!doctype", ""},
-    {"&lt;html", "&lt;/html&gt;"},
-    {"&lt;head", "&lt;/head&gt;"},
-    {"&lt;title", "&lt;/title&gt;"},
-    {"&lt;meta", "&lt;/meta&gt;"},
-    {"&lt;body", "&lt;/body&gt;"},
-    {"&lt;h1", "&lt;/h1&gt;"},
-    {"&lt;h2", "&lt;/h2&gt;"},
-    {"&lt;center", "&lt;/center&gt;"},
-    {"&lt;a", "&lt;/a&gt;"},
-    {"&lt;p", "&lt;/p&gt;"},
-    {"&lt;ol", "&lt;/ol&gt;"},
-    {"&lt;ul", "&lt;/ul&gt;"},
-    {"&lt;li", "&lt;/li&gt;"},
-    {"&lt;table", "&lt;/table&gt;"},
-    {"&lt;td", "&lt;/td&gt;"},
-    {"&lt;tr", "&lt;/tr&gt;"},
-    {"&lt;img", "&lt;/img&gt;"},
-    {"&lt;svg", "&lt;/svg&gt;"},
-    {"&lt;div", "&lt;/div&gt;"},
-    {"&lt;form", "&lt;/form&gt;"},
-    {"&lt;input", ""},
-    {"&lt;nav", "&lt;/nav&gt;"},
-    {"&lt;header", "&lt;/header&gt;"},
-    {"&lt;footer", "&lt;/footer&gt;"},
-    {"&lt;span", "&lt;/span&gt;"},
-    {"&lt;strong", "&lt;/strong&gt;"},
-    {"&lt;em", "&lt;/em&gt;"},
-    {"&lt;link", ""},
-    {"&lt;br", ""}
-};
+    std::map&lt;std::string,std::string&gt; html_tags = {
+        {"&lt;!DOCTYPE", ""},
+        {"&lt;!doctype", ""},
+        {"&lt;html", "&lt;/html&gt;"},
+        {"&lt;head", "&lt;/head&gt;"},
+        {"&lt;title", "&lt;/title&gt;"},
+        {"&lt;meta", "&lt;/meta&gt;"},
+        {"&lt;body", "&lt;/body&gt;"},
+        {"&lt;h1", "&lt;/h1&gt;"},
+        {"&lt;h2", "&lt;/h2&gt;"},
+        {"&lt;center", "&lt;/center&gt;"},
+        {"&lt;a", "&lt;/a&gt;"},
+        {"&lt;p", "&lt;/p&gt;"},
+        {"&lt;ol", "&lt;/ol&gt;"},
+        {"&lt;ul", "&lt;/ul&gt;"},
+        {"&lt;li", "&lt;/li&gt;"},
+        {"&lt;table", "&lt;/table&gt;"},
+        {"&lt;td", "&lt;/td&gt;"},
+        {"&lt;tr", "&lt;/tr&gt;"},
+        {"&lt;img", "&lt;/img&gt;"},
+        {"&lt;svg", "&lt;/svg&gt;"},
+        {"&lt;div", "&lt;/div&gt;"},
+        {"&lt;form", "&lt;/form&gt;"},
+        {"&lt;input", ""},
+        {"&lt;nav", "&lt;/nav&gt;"},
+        {"&lt;header", "&lt;/header&gt;"},
+        {"&lt;footer", "&lt;/footer&gt;"},
+        {"&lt;span", "&lt;/span&gt;"},
+        {"&lt;strong", "&lt;/strong&gt;"},
+        {"&lt;em", "&lt;/em&gt;"},
+        {"&lt;link", ""},
+        {"&lt;br", ""}
+    };
 </code></p>
 
 <p>Now we need to know what to replace those tags with, let’s use another map for that:</p>
 
 <p><code>
-std::map&lt;std::string,std::string&gt; conversion_map = {
-    {"&lt;title", "\33\[37m\n"},
-    {"&lt;a", "\33\[34m"},
-    {"&lt;header", ""},
-    {"&lt;footer", ""},
-    {"&lt;div", "\033\[37m\n"},
-    {"&lt;span", " "},
-    {"&lt;li", " | "},
-    {"&lt;p", "\n"},
-    {"&lt;strong", "\033\[1m"},
-    {"&lt;em", "\033\[7m"},
-    {"&lt;h1", ""},
-    {"&lt;h2", ""},
-    {"&lt;ul", ""},
-    {"&lt;li", ""},
-    {"&lt;svg", ""},
-    {"&lt;link", ""},
-    {"&lt;br", ""}
-};
+    std::map&lt;std::string,std::string&gt; conversion_map = {
+        {"&lt;title", "\33\[37m\n"},
+        {"&lt;a", "\33\[34m"},
+        {"&lt;header", ""},
+        {"&lt;footer", ""},
+        {"&lt;div", "\033\[37m\n"},
+        {"&lt;span", " "},
+        {"&lt;li", " | "},
+        {"&lt;p", "\n"},
+        {"&lt;strong", "\033\[1m"},
+        {"&lt;em", "\033\[7m"},
+        {"&lt;h1", ""},
+        {"&lt;h2", ""},
+        {"&lt;ul", ""},
+        {"&lt;li", ""},
+        {"&lt;svg", ""},
+        {"&lt;link", ""},
+        {"&lt;br", ""}
+    };
 </code></p>
 
 <p>It’s worth noting that this is C++11 syntax, make sure you’re compiling your file with support to it.</p>
@@ -200,38 +199,39 @@ std::map&lt;std::string,std::string&gt; conversion_map = {
 <p>Now to the task:</p>
 
 <p>```
-std::string HTMLToANSI(std::string html) {
-    std::map&lt;std::string,std::string&gt;::iterator it;
-    std::size_t pos;
-    std::size_t close_pos;
-    std::string close_entity = “&gt;”;
-    int shift = close_entity.size();
-    std::string opening_tag;
-    std::string closing_tag;</p>
+    std::string HTMLToANSI(std::string html) {
+        std::map&lt;std::string,std::string&gt;::iterator it;
+        std::size_t pos;
+        std::size_t close_pos;
+        std::string close_entity = “&gt;”;
+        int shift = close_entity.size();
+        std::string opening_tag;
+        std::string closing_tag;</p>
 
-<pre><code>html = removeTagsContent(html);
+<pre><code>    html = removeTagsContent(html);
 
-for(it = html_tags.begin(); it != html_tags.end(); it++) {
-    opening_tag = it-&gt;first;
-    while ((pos = html.find(opening_tag)) != std::string::npos) {
-        close_pos = html.find(close_entity, pos);
+    for(it = html_tags.begin(); it != html_tags.end(); it++) {
+        opening_tag = it-&gt;first;
+        while ((pos = html.find(opening_tag)) != std::string::npos) {
+            close_pos = html.find(close_entity, pos);
 
-        if (close_pos != std::string::npos)
-            html.replace(pos, (close_pos - pos) + shift, conversion_map[opening_tag]);
-        else
-            html.replace(pos, opening_tag.size() + close_entity.size(), conversion_map[opening_tag]);
+            if (close_pos != std::string::npos)
+                html.replace(pos, (close_pos - pos) + shift, conversion_map[opening_tag]);
+            else
+                html.replace(pos, opening_tag.size() + close_entity.size(), conversion_map[opening_tag]);
 
-        closing_tag = it-&gt;second;
-        pos = html.find(closing_tag);
+            closing_tag = it-&gt;second;
+            pos = html.find(closing_tag);
 
-        if (pos == std::string::npos)
-            continue;
+            if (pos == std::string::npos)
+                continue;
 
-        html.replace(pos, closing_tag.size(), "");
+            html.replace(pos, closing_tag.size(), "");
+        }
     }
-}
 
-return improveFormatting(html); } ```
+    return improveFormatting(html);
+} ```
 </code></pre>
 
 <p>Now that we have replaced the whole tags with our escape sequences, we need to remove contents of certain tags,
@@ -239,52 +239,54 @@ like <code>&lt;style&gt;</code> and <code>&lt;script&gt;</code>.
 So before the program replaces the HTML tags we must remove the contents of those tags:</p>
 
 <p>```
-std::string removeTagsContent(std::string html) {
-    std::map&lt;std::string,std::string&gt;::iterator it;
-    std::string opening_tag;
-    std::string closing_tag;
-    std::size_t pos;
-    std::size_t close_pos;</p>
+    std::string removeTagsContent(std::string html) {
+        std::map&lt;std::string,std::string&gt;::iterator it;
+        std::string opening_tag;
+        std::string closing_tag;
+        std::size_t pos;
+        std::size_t close_pos;</p>
 
-<pre><code>for(it = no_contents_map.begin(); it != no_contents_map.end(); it++) {
-    opening_tag = it-&gt;first;
-    closing_tag = it-&gt;second;
-    while((pos = html.find(opening_tag)) != std::string::npos) {
-        close_pos = html.find(closing_tag, pos);
-        html.replace(pos, (close_pos - pos) + closing_tag.size(), "");
+<pre><code>    for(it = no_contents_map.begin(); it != no_contents_map.end(); it++) {
+        opening_tag = it-&gt;first;
+        closing_tag = it-&gt;second;
+        while((pos = html.find(opening_tag)) != std::string::npos) {
+            close_pos = html.find(closing_tag, pos);
+            html.replace(pos, (close_pos - pos) + closing_tag.size(), "");
+        }
     }
-}
-return html; } ```
+    return html;
+} ```
 </code></pre>
 
 <p>After replacing everything, there’re lots of new lines and useless whitespaces as leftovers from the formatting,
 to fix that I built a simple function:</p>
 
 <p>```
-std::string improveFormatting(std::string html) {
-    std::size_t pos;
-    std::string token = “  “;
+    std::string improveFormatting(std::string html) {
+        std::size_t pos;
+        std::string token = “  “;
+        while ((pos = html.find(token)) != std::string::npos) {
+            html.replace(pos, token.size(), “ “);
+        }</p>
+
+<pre><code>    token = "\n \n";
     while ((pos = html.find(token)) != std::string::npos) {
-        html.replace(pos, token.size(), “ “);
-    }</p>
+        html.erase(pos, token.size());
+    }
 
-<pre><code>token = "\n \n";
-while ((pos = html.find(token)) != std::string::npos) {
-    html.erase(pos, token.size());
-}
+    token = "\n\n ";
+    while ((pos = html.find(token)) != std::string::npos) {
+        html.erase(pos, token.size());
+    }
 
-token = "\n\n ";
-while ((pos = html.find(token)) != std::string::npos) {
-    html.erase(pos, token.size());
-}
-
-return html; } ```
+    return html;
+} ```
 </code></pre>
 
 <p>Now that everything has been dealt with, to run the program from <a href="https://github.com/flaviamissi/webbrowser-experiment">my repository</a>:</p>
 
 <p><code>
-$ make run url=&lt;your-url.com&gt;
+    $ make run url=&lt;your-url.com&gt;
 </code></p>
 
 <p>Take a look at the code and comment on github if there’s anything else you need to know.</p>
