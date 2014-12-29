@@ -10,7 +10,6 @@ First things first, let's list some basic browsing features:
 
     - get content of webpages given a url using HTTP or HTTPS
     - interpret front-end stack, html, css, javascript..
-    - is that all?
 
 
 We're going to do this in C++ so things get a little more exciting. Let's have a look
