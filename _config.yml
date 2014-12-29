@@ -4,8 +4,8 @@ email: flaviamissi@gmail.com
 description: > # this means to ignore newlines until "baseurl:"
     Passionate developer, cloud and devops enthusiast, trying to improve my skills
     on both operation and development. Any tips are welcome :)
-baseurl: "http://flaviamissi.github.io/" # the subpath of your site, e.g. /blog/
-url: "http://flaviamissi.github.io/" # the base hostname & protocol for your site
+baseurl: "" # the subpath of your site, e.g. /blog/
+url: http://flaviamissi.com.br # the base hostname & protocol for your site
 twitter_username: flaviamissi
 github_username:  flaviamissi
 

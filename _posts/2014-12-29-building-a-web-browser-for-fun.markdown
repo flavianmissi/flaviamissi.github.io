@@ -25,7 +25,6 @@ read the [libcurl tutorial](http://curl.haxx.se/libcurl/c/libcurl-tutorial.html)
 
 Perform a request:
 
-```
     curl_global_init(CURL_GLOBAL_ALL);
 
     CURL *handle = curl_easy_init();
@@ -38,7 +37,6 @@ Perform a request:
         std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(resp) << std::endl;
 
     curl_global_cleanup();
-```
 
 You can check the complete code on my [github repository](https://github.com/flaviamissi/webbrowser-experiment/blob/cc7b2e5a0bea22157707a0636af38a45bac1f999/main.cpp).
 
@@ -65,7 +63,6 @@ This is the hardest part of the job. A simple search into google returns various
 the opposite, I'm going to use my own approach here.
 Starting simple, let's colour all links to blue:
 
-```C++
     std::string blue = "\33\[34m";
     std::size_t pos = html.find("<a>");
     if (pos != std::string::npos) {
@@ -73,12 +70,10 @@ Starting simple, let's colour all links to blue:
         pos = html.find("</a>");
         html.replace(pos, 4, "");
     }
-```
 
 This is a very simple case that just works when the tag has no attributes, not very useful huh?
 We need to generalize this, so let's create a map to keep all tags and its closing tags too.
 
-```
     std::map<std::string,std::string> html_tags = {
         {"<!DOCTYPE", ""},
         {"<!doctype", ""},
@@ -112,11 +107,9 @@ We need to generalize this, so let's create a map to keep all tags and its closi
         {"<link", ""},
         {"<br", ""}
     };
-```
 
 Now we need to know what to replace those tags with, let's use another map for that:
 
-```
     std::map<std::string,std::string> conversion_map = {
         {"<title", "\33\[37m\n"},
         {"<a", "\33\[34m"},
@@ -136,13 +129,11 @@ Now we need to know what to replace those tags with, let's use another map for t
         {"<link", ""},
         {"<br", ""}
     };
-```
 
 It's worth noting that this is C++11 syntax, make sure you're compiling your file with support to it.
 
 Now to the task:
 
-```
     std::string HTMLToANSI(std::string html) {
         std::map<std::string,std::string>::iterator it;
         std::size_t pos;
@@ -176,14 +167,12 @@ Now to the task:
 
         return improveFormatting(html);
     }
-```
 
 
 Now that we have replaced the whole tags with our escape sequences, we need to remove contents of certain tags,
 like `<style>` and `<script>`.
 So before the program replaces the HTML tags we must remove the contents of those tags:
 
-```
     std::string removeTagsContent(std::string html) {
         std::map<std::string,std::string>::iterator it;
         std::string opening_tag;
@@ -201,12 +190,10 @@ So before the program replaces the HTML tags we must remove the contents of thos
         }
         return html;
     }
-```
 
 After replacing everything, there're lots of new lines and useless whitespaces as leftovers from the formatting,
 to fix that I built a simple function:
 
-```
     std::string improveFormatting(std::string html) {
         std::size_t pos;
         std::string token = "  ";
@@ -226,12 +213,9 @@ to fix that I built a simple function:
 
         return html;
     }
-```
 
 Now that everything has been dealt with, to run the program from [my repository](https://github.com/flaviamissi/webbrowser-experiment):
 
-```
     $ make run url=<your-url.com>
-```
 
 Take a look at the code and comment on github if there's anything else you need to know.
