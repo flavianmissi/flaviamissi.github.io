@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width initial-scale=1" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>About</title>
+    <title>Testing a webserver written in Go</title>
     <meta name="description" content="Passionate developer, cloud and devops enthusiast, trying to improve my skills on both operation and development. Any tips are welcome :)
 ">
 
     <link rel="stylesheet" href="http://flaviamissi.github.io//css/main.css">
-    <link rel="canonical" href="http://flaviamissi.github.io/http://flaviamissi.github.io//about/">
+    <link rel="canonical" href="http://flaviamissi.github.io/http://flaviamissi.github.io//golang/tsuru/webservers/tests/2012/05/21/testing-a-webserver-written-in-go.html">
 </head>
 
 
@@ -57,14 +57,20 @@
         <div class="post">
 
   <header class="post-header">
-    <h1 class="post-title">About</h1>
+    <h1 class="post-title">Testing a webserver written in Go</h1>
+    <p class="post-meta">May 21, 2012</p>
   </header>
 
   <article class="post-content">
-    <p>Hey!
-I’m a CS self study seeking the right place to get a BS.
-This blog is my space to talk about technologies I meet during my development journey.
-Through it I’ll try to teach everyone what I learn with daily experience and/or self study.</p>
+    <p>I’ve been recently working on an api that needed to be super fast and made async calls to Canonical’s Juju. For this job, my team and I choosed to use <a href="http://golang.org/">Golang</a>, wich’s aim is to be fast and easy to learn.</p>
+
+<p>We’ve found some difficulty searching for samples of how to test the api handlers that we wrote, reading Juju’s source code I found some tests that started a test webserver and used it to make the requests. Based on that sample, I made some very clear tests, on top of some handlers that I wrote for that porpose.</p>
+
+<p>Those tests served as a base for all Tsuru’s api tests, that you can find here: <a href="http://github.com/globocom/tsuru">http://github.com/globocom/tsuru</a></p>
+
+<p>The original base tests can be found here: <a href="https://github.com/flaviamissi/go-webserver-sample/blob/master/handlers/handlers_test.go">https://github.com/flaviamissi/go-webserver-sample/blob/master/handlers/handlers_test.go</a></p>
+
+<p>Hope it helps ;)</p>
 
   </article>
 

@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width initial-scale=1" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>Building and installing lxml with PyPy</title>
-    <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
+    <title>Rebuilding my blog</title>
+    <meta name="description" content="Passionate developer, cloud and devops enthusiast, trying to improve my skills on both operation and development. Any tips are welcome :)
 ">
 
-    <link rel="stylesheet" href="/css/main.css">
-    <link rel="canonical" href="http://yourdomain.com/pypy/python/2013/09/19/building-and-stalling-lxml-with-pypy.html">
+    <link rel="stylesheet" href="http://flaviamissi.github.io//css/main.css">
+    <link rel="canonical" href="http://flaviamissi.github.io/http://flaviamissi.github.io//uncategorized/2013/09/19/rebuilding-my-blog.html">
 </head>
 
 
@@ -21,7 +21,7 @@
 
   <div class="wrapper">
 
-    <a class="site-title" href="/">Your awesome title</a>
+    <a class="site-title" href="http://flaviamissi.github.io//">Flavia Missi's blog</a>
 
     <nav class="site-nav">
       <a href="#" class="menu-icon">
@@ -35,7 +35,7 @@
       <div class="trigger">
         
           
-          <a class="page-link" href="/about/">About</a>
+          <a class="page-link" href="http://flaviamissi.github.io//about/">About</a>
           
         
           
@@ -57,46 +57,18 @@
         <div class="post">
 
   <header class="post-header">
-    <h1 class="post-title">Building and installing lxml with PyPy</h1>
+    <h1 class="post-title">Rebuilding my blog</h1>
     <p class="post-meta">Sep 19, 2013</p>
   </header>
 
   <article class="post-content">
-    <h2 id="introduction">Introduction</h2>
-<p>The major issue my colleagues and I found when we started running some projects with <a href="http://pypy.org/">PyPy</a> was the
-<a href="https://pypi.python.org/pypi/lxml/3.2.3">lxml</a> library. It uses <a href="http://docs.cython.org/src/quickstart/overview.html">Cython</a>,
-which can run with PyPy if you write your code <a href="http://docs.cython.org/src/userguide/pypy.html">portably enough</a>.
-So an effort began to port lxml to use <a href="https://cffi.readthedocs.org/en/release-0.7/">CFFI</a>. This effort can be found
-on <a href="https://github.com/amauryfa/lxml">this fork</a> and this is the code we’re going to install from.</p>
+    <p>As some may observe, I removed some of my oldest posts. That’s because they were written in portuguese, and
+my blog is now in english. I will not translate them because I wrote them when I was starting my career
+as a software engineer and think they’re not as valuable as the ones in here.</p>
 
-<h2 id="resolving-dependencies">Resolving dependencies</h2>
+<p>I will keep writting about the coolest stuff I’m involved - all in english, and hope to enable comments very soon.</p>
 
-<p>We are going to install lxml on a ubuntu 13.04, be warned that installation in OSX might give you serious headaches (&lt;10.8). Start by running the following apt-get:</p>
-
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>sudo apt-get install libxml2 libxslt1-dev zlib1g-dev</code></pre></div>
-
-<p>These packages are needed to build lxml (with Python or PyPy).</p>
-
-<h2 id="bootstraping-your-environment">Bootstraping your environment</h2>
-
-<p>You’ll need to have PyPy’s binary to build lxml with, you can folow Andrews Medina’s guide to install it (but it’s in portuguese…)</p>
-
-<p>Assuming you have it installed let’s create a virtual environment (with virtualenv and virtualenvwrapper) to install lxml in:</p>
-
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>mkvirtualenv lxml-pypy -p /path/to/pypy/bin/pypy</code></pre></div>
-
-<p>Now clone the lxml fork and checkout to the CFFI branch:</p>
-
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>git clone https://github.com/amauryfa/lxml.git
-<span class="nv">$ </span><span class="nb">cd </span>lxml
-<span class="nv">$ </span>git checkout origin/cffi</code></pre></div>
-
-<p>Now build and install (double check if you’re in the right virtual environment):</p>
-
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>python setup.py build
-<span class="nv">$ </span>python setup.py install</code></pre></div>
-
-<p>Done!</p>
+<p>Thanks for reading.</p>
 
   </article>
 
@@ -109,13 +81,13 @@ on <a href="https://github.com/amauryfa/lxml">this fork</a> and this is the code
 
   <div class="wrapper">
 
-    <h2 class="footer-heading">Your awesome title</h2>
+    <h2 class="footer-heading">Flavia Missi's blog</h2>
 
     <div class="footer-col-wrapper">
       <div class="footer-col  footer-col-1">
         <ul class="contact-list">
-          <li>Your awesome title</li>
-          <li><a href="mailto:your-email@domain.com">your-email@domain.com</a></li>
+          <li>Flavia Missi's blog</li>
+          <li><a href="mailto:flaviamissi@gmail.com">flaviamissi@gmail.com</a></li>
         </ul>
       </div>
 
@@ -123,21 +95,21 @@ on <a href="https://github.com/amauryfa/lxml">this fork</a> and this is the code
         <ul class="social-media-list">
           
           <li>
-            <a href="https://github.com/jekyll">
+            <a href="https://github.com/flaviamissi">
               <span class="icon  icon--github">
                 <svg viewBox="0 0 16 16">
                   <path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
                 </svg>
               </span>
 
-              <span class="username">jekyll</span>
+              <span class="username">flaviamissi</span>
             </a>
           </li>
           
 
           
           <li>
-            <a href="https://twitter.com/jekyllrb">
+            <a href="https://twitter.com/flaviamissi">
               <span class="icon  icon--twitter">
                 <svg viewBox="0 0 16 16">
                   <path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
@@ -145,7 +117,7 @@ on <a href="https://github.com/amauryfa/lxml">this fork</a> and this is the code
                 </svg>
               </span>
 
-              <span class="username">jekyllrb</span>
+              <span class="username">flaviamissi</span>
             </a>
           </li>
           
@@ -153,7 +125,7 @@ on <a href="https://github.com/amauryfa/lxml">this fork</a> and this is the code
       </div>
 
       <div class="footer-col  footer-col-3">
-        <p class="text">Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
+        <p class="text">Passionate developer, cloud and devops enthusiast, trying to improve my skills on both operation and development. Any tips are welcome :)
 </p>
       </div>
     </div>

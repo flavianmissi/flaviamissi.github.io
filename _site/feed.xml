@@ -1,14 +1,273 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Your awesome title</title>
-    <description>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
+    <title>Flavia Missi&#39;s blog</title>
+    <description>Passionate developer, cloud and devops enthusiast, trying to improve my skills on both operation and development. Any tips are welcome :)
 </description>
-    <link>http://yourdomain.com/</link>
-    <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Sun, 19 Oct 2014 23:59:43 -0200</pubDate>
-    <lastBuildDate>Sun, 19 Oct 2014 23:59:43 -0200</lastBuildDate>
+    <link>http://flaviamissi.github.io/http://flaviamissi.github.io//</link>
+    <atom:link href="http://flaviamissi.github.io/http://flaviamissi.github.io//feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Mon, 29 Dec 2014 20:45:53 -0200</pubDate>
+    <lastBuildDate>Mon, 29 Dec 2014 20:45:53 -0200</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
+    
+      <item>
+        <title>Building a web browser for fun</title>
+        <description>&lt;p&gt;First things first, let’s list some basic browsing features:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;- get content of webpages given a url using HTTP or HTTPS
+- interpret front-end stack, html, css, javascript..
+- is that all?
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We’re going to do this in C++ so things get a little more exciting. Let’s have a look
+at C++’s http[s] built-in lib: a quick google search showed lots of opensource implementations
+of HTTP clients to C++, but a lot of people also seem to like to simply use libcURL for the job.
+That’ll be our choice for now.&lt;/p&gt;
+
+&lt;h2 id=&quot;loading-an-url-with-libcurl&quot;&gt;Loading an url with libcURL&lt;/h2&gt;
+
+&lt;p&gt;There are some details I will not include here, but you can check them in the source code later, or
+read the &lt;a href=&quot;http://curl.haxx.se/libcurl/c/libcurl-tutorial.html&quot;&gt;libcurl tutorial&lt;/a&gt; yourself.&lt;/p&gt;
+
+&lt;p&gt;Perform a request:&lt;/p&gt;
+
+&lt;p&gt;```c++
+curl_global_init(CURL_GLOBAL_ALL);&lt;/p&gt;
+
+&lt;p&gt;CURL *handle = curl_easy_init();&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;curl_easy_setopt(handle, CURLOPT_URL, &quot;http://flaviamissi.com.br&quot;);
+curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, 1L);
+
+CURLcode resp = curl_easy_perform(handle);
+if(resp != CURLE_OK)
+    std::cerr &amp;lt;&amp;lt; &quot;curl_easy_perform() failed: &quot; &amp;lt;&amp;lt; curl_easy_strerror(resp) &amp;lt;&amp;lt; std::endl;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;curl_global_cleanup();
+```&lt;/p&gt;
+
+&lt;p&gt;You can check the complete code on my &lt;a href=&quot;https://github.com/flaviamissi/webbrowser-experiment/blob/cc7b2e5a0bea22157707a0636af38a45bac1f999/main.cpp&quot;&gt;github repository&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;I refactored the code a bit on master, so its prettier to perform a request.&lt;/p&gt;
+
+&lt;p&gt;The next step is to render the requested page’s html.&lt;/p&gt;
+
+&lt;h2 id=&quot;rendering-the-html&quot;&gt;Rendering the html&lt;/h2&gt;
+
+&lt;p&gt;I looked that up a bit online, only to find great libraries that could a LOT for me, that’s why I
+decided to approach the problem in a really simplistic way: we translate the HTML to ANSI escape
+sequences. This is far from an ideal approach, but I chose this approach beucase I wanted to deal myself
+with the requests made to the browser, which is not possible given all the available tools I found, for example,
+the simplest tool I found to do the job was &lt;a href=&quot;http://en.wikipedia.org/wiki/KHTML&quot;&gt;KHTML&lt;/a&gt;, which has been forked by
+Google and Apple to build their own engines.&lt;/p&gt;
+
+&lt;p&gt;I could’ve also used &lt;a href=&quot;http://en.wikipedia.org/wiki/WebKit&quot;&gt;Apple WebKit&lt;/a&gt; (Safari) or
+&lt;a href=&quot;http://en.wikipedia.org/wiki/Blink_(layout_engine)&quot;&gt;Blink&lt;/a&gt; (Google, Opera, etc), but they also solve all of my
+problems, giving my almost nothing else to do.&lt;/p&gt;
+
+&lt;h3 id=&quot;translating-the-html-to-ansi-escape-sequences&quot;&gt;Translating the HTML to ANSI escape sequences&lt;/h3&gt;
+
+&lt;p&gt;This is the hardest part of the job. A simple search into google returns various results of people asking how to do
+the opposite, I’m going to use my own approach here.
+Starting simple, let’s colour all links to blue:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;C++
+std::string blue = &quot;\33\[34m&quot;;
+std::size_t pos = html.find(&quot;&amp;lt;a&amp;gt;&quot;);
+if (pos != std::string::npos) {
+    html.replace(pos, 3, blue);
+    pos = html.find(&quot;&amp;lt;/a&amp;gt;&quot;);
+    html.replace(pos, 4, &quot;&quot;);
+}
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;This is a very simple case that just works when the tag has no attributes, not very useful huh?
+We need to generalize this, so let’s create a map to keep all tags and its closing tags too.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;C++
+std::map&amp;lt;std::string,std::string&amp;gt; html_tags = {
+    {&quot;&amp;lt;!DOCTYPE&quot;, &quot;&quot;},
+    {&quot;&amp;lt;!doctype&quot;, &quot;&quot;},
+    {&quot;&amp;lt;html&quot;, &quot;&amp;lt;/html&amp;gt;&quot;},
+    {&quot;&amp;lt;head&quot;, &quot;&amp;lt;/head&amp;gt;&quot;},
+    {&quot;&amp;lt;title&quot;, &quot;&amp;lt;/title&amp;gt;&quot;},
+    {&quot;&amp;lt;meta&quot;, &quot;&amp;lt;/meta&amp;gt;&quot;},
+    {&quot;&amp;lt;body&quot;, &quot;&amp;lt;/body&amp;gt;&quot;},
+    {&quot;&amp;lt;h1&quot;, &quot;&amp;lt;/h1&amp;gt;&quot;},
+    {&quot;&amp;lt;h2&quot;, &quot;&amp;lt;/h2&amp;gt;&quot;},
+    {&quot;&amp;lt;center&quot;, &quot;&amp;lt;/center&amp;gt;&quot;},
+    {&quot;&amp;lt;a&quot;, &quot;&amp;lt;/a&amp;gt;&quot;},
+    {&quot;&amp;lt;p&quot;, &quot;&amp;lt;/p&amp;gt;&quot;},
+    {&quot;&amp;lt;ol&quot;, &quot;&amp;lt;/ol&amp;gt;&quot;},
+    {&quot;&amp;lt;ul&quot;, &quot;&amp;lt;/ul&amp;gt;&quot;},
+    {&quot;&amp;lt;li&quot;, &quot;&amp;lt;/li&amp;gt;&quot;},
+    {&quot;&amp;lt;table&quot;, &quot;&amp;lt;/table&amp;gt;&quot;},
+    {&quot;&amp;lt;td&quot;, &quot;&amp;lt;/td&amp;gt;&quot;},
+    {&quot;&amp;lt;tr&quot;, &quot;&amp;lt;/tr&amp;gt;&quot;},
+    {&quot;&amp;lt;img&quot;, &quot;&amp;lt;/img&amp;gt;&quot;},
+    {&quot;&amp;lt;svg&quot;, &quot;&amp;lt;/svg&amp;gt;&quot;},
+    {&quot;&amp;lt;div&quot;, &quot;&amp;lt;/div&amp;gt;&quot;},
+    {&quot;&amp;lt;form&quot;, &quot;&amp;lt;/form&amp;gt;&quot;},
+    {&quot;&amp;lt;input&quot;, &quot;&quot;},
+    {&quot;&amp;lt;nav&quot;, &quot;&amp;lt;/nav&amp;gt;&quot;},
+    {&quot;&amp;lt;header&quot;, &quot;&amp;lt;/header&amp;gt;&quot;},
+    {&quot;&amp;lt;footer&quot;, &quot;&amp;lt;/footer&amp;gt;&quot;},
+    {&quot;&amp;lt;span&quot;, &quot;&amp;lt;/span&amp;gt;&quot;},
+    {&quot;&amp;lt;strong&quot;, &quot;&amp;lt;/strong&amp;gt;&quot;},
+    {&quot;&amp;lt;em&quot;, &quot;&amp;lt;/em&amp;gt;&quot;},
+    {&quot;&amp;lt;link&quot;, &quot;&quot;},
+    {&quot;&amp;lt;br&quot;, &quot;&quot;}
+};
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Now we need to know what to replace those tags with, let’s use another map for that:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;C++
+std::map&amp;lt;std::string,std::string&amp;gt; conversion_map = {
+    {&quot;&amp;lt;title&quot;, &quot;\33\[37m\n&quot;},
+    {&quot;&amp;lt;a&quot;, &quot;\33\[34m&quot;},
+    {&quot;&amp;lt;header&quot;, &quot;&quot;},
+    {&quot;&amp;lt;footer&quot;, &quot;&quot;},
+    {&quot;&amp;lt;div&quot;, &quot;\033\[37m\n&quot;},
+    {&quot;&amp;lt;span&quot;, &quot; &quot;},
+    {&quot;&amp;lt;li&quot;, &quot; | &quot;},
+    {&quot;&amp;lt;p&quot;, &quot;\n&quot;},
+    {&quot;&amp;lt;strong&quot;, &quot;\033\[1m&quot;},
+    {&quot;&amp;lt;em&quot;, &quot;\033\[7m&quot;},
+    {&quot;&amp;lt;h1&quot;, &quot;&quot;},
+    {&quot;&amp;lt;h2&quot;, &quot;&quot;},
+    {&quot;&amp;lt;ul&quot;, &quot;&quot;},
+    {&quot;&amp;lt;li&quot;, &quot;&quot;},
+    {&quot;&amp;lt;svg&quot;, &quot;&quot;},
+    {&quot;&amp;lt;link&quot;, &quot;&quot;},
+    {&quot;&amp;lt;br&quot;, &quot;&quot;}
+};
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;It’s worth noting that this is C++11 syntax, make sure you’re compiling your file with support to it.&lt;/p&gt;
+
+&lt;p&gt;Now to the task:&lt;/p&gt;
+
+&lt;p&gt;```C++
+std::string HTMLToANSI(std::string html) {
+    std::map&amp;lt;std::string,std::string&amp;gt;::iterator it;
+    std::size_t pos;
+    std::size_t close_pos;
+    std::string close_entity = “&amp;gt;”;
+    int shift = close_entity.size();
+    std::string opening_tag;
+    std::string closing_tag;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;html = removeTagsContent(html);
+
+for(it = html_tags.begin(); it != html_tags.end(); it++) {
+    opening_tag = it-&amp;gt;first;
+    while ((pos = html.find(opening_tag)) != std::string::npos) {
+        close_pos = html.find(close_entity, pos);
+
+        if (close_pos != std::string::npos)
+            html.replace(pos, (close_pos - pos) + shift, conversion_map[opening_tag]);
+        else
+            html.replace(pos, opening_tag.size() + close_entity.size(), conversion_map[opening_tag]);
+
+        closing_tag = it-&amp;gt;second;
+        pos = html.find(closing_tag);
+
+        if (pos == std::string::npos)
+            continue;
+
+        html.replace(pos, closing_tag.size(), &quot;&quot;);
+    }
+}
+
+return improveFormatting(html); } ```
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now that we have replaced the whole tags with our escape sequences, we need to remove contents of certain tags,
+like &lt;code&gt;&amp;lt;style&amp;gt;&lt;/code&gt; and &lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt;.
+So before the program replaces the HTML tags we must remove the contents of those tags:&lt;/p&gt;
+
+&lt;p&gt;```C++
+std::string removeTagsContent(std::string html) {
+    std::map&amp;lt;std::string,std::string&amp;gt;::iterator it;
+    std::string opening_tag;
+    std::string closing_tag;
+    std::size_t pos;
+    std::size_t close_pos;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;for(it = no_contents_map.begin(); it != no_contents_map.end(); it++) {
+    opening_tag = it-&amp;gt;first;
+    closing_tag = it-&amp;gt;second;
+    while((pos = html.find(opening_tag)) != std::string::npos) {
+        close_pos = html.find(closing_tag, pos);
+        html.replace(pos, (close_pos - pos) + closing_tag.size(), &quot;&quot;);
+    }
+}
+return html; } ```
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After replacing everything, there’re lots of new lines and useless whitespaces as leftovers from the formatting,
+to fix that I built a simple function:&lt;/p&gt;
+
+&lt;p&gt;```C++
+std::string improveFormatting(std::string html) {
+    std::size_t pos;
+    std::string token = “  “;
+    while ((pos = html.find(token)) != std::string::npos) {
+        html.replace(pos, token.size(), “ “);
+    }&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;token = &quot;\n \n&quot;;
+while ((pos = html.find(token)) != std::string::npos) {
+    html.erase(pos, token.size());
+}
+
+token = &quot;\n\n &quot;;
+while ((pos = html.find(token)) != std::string::npos) {
+    html.erase(pos, token.size());
+}
+
+return html; } ```
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now that everything has been dealt with, to run the program from &lt;a href=&quot;https://github.com/flaviamissi/webbrowser-experiment&quot;&gt;my repository&lt;/a&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;shell
+$ make run url=&amp;lt;your-url.com&amp;gt;
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Take a look at the code and comment on github if there’s anything else you need to know.&lt;/p&gt;
+</description>
+        <pubDate>Mon, 29 Dec 2014 00:00:00 -0200</pubDate>
+        <link>http://flaviamissi.github.io/http://flaviamissi.github.io//c++/libcurl/2014/12/29/building-a-web-browser-for-fun.html</link>
+        <guid isPermaLink="true">http://flaviamissi.github.io/http://flaviamissi.github.io//c++/libcurl/2014/12/29/building-a-web-browser-for-fun.html</guid>
+        
+        
+        <category>c++</category>
+        
+        <category>libcurl</category>
+        
+      </item>
+    
+      <item>
+        <title>Rebuilding my blog</title>
+        <description>&lt;p&gt;As some may observe, I removed some of my oldest posts. That’s because they were written in portuguese, and
+my blog is now in english. I will not translate them because I wrote them when I was starting my career
+as a software engineer and think they’re not as valuable as the ones in here.&lt;/p&gt;
+
+&lt;p&gt;I will keep writting about the coolest stuff I’m involved - all in english, and hope to enable comments very soon.&lt;/p&gt;
+
+&lt;p&gt;Thanks for reading.&lt;/p&gt;
+</description>
+        <pubDate>Thu, 19 Sep 2013 00:00:00 -0300</pubDate>
+        <link>http://flaviamissi.github.io/http://flaviamissi.github.io//uncategorized/2013/09/19/rebuilding-my-blog.html</link>
+        <guid isPermaLink="true">http://flaviamissi.github.io/http://flaviamissi.github.io//uncategorized/2013/09/19/rebuilding-my-blog.html</guid>
+        
+        
+        <category>uncategorized</category>
+        
+      </item>
     
       <item>
         <title>Building and installing lxml with PyPy</title>
@@ -49,8 +308,8 @@ on &lt;a href=&quot;https://github.com/amauryfa/lxml&quot;&gt;this fork&lt;/a&gt
 &lt;p&gt;Done!&lt;/p&gt;
 </description>
         <pubDate>Thu, 19 Sep 2013 00:00:00 -0300</pubDate>
-        <link>http://yourdomain.com/pypy/python/2013/09/19/building-and-stalling-lxml-with-pypy.html</link>
-        <guid isPermaLink="true">http://yourdomain.com/pypy/python/2013/09/19/building-and-stalling-lxml-with-pypy.html</guid>
+        <link>http://flaviamissi.github.io/http://flaviamissi.github.io//pypy/python/2013/09/19/building-and-installing-lxml-with-pypy.html</link>
+        <guid isPermaLink="true">http://flaviamissi.github.io/http://flaviamissi.github.io//pypy/python/2013/09/19/building-and-installing-lxml-with-pypy.html</guid>
         
         
         <category>pypy</category>
@@ -201,13 +460,40 @@ dr-xr-xr-x  &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; root    root   attr&l
 &lt;p&gt;Also, as you might have noticed I simply didn’t addressed the files right under &lt;em&gt;/proc&lt;/em&gt;. That’s because I see the information they carry as more important than the former – this is because of my programming background and day-to-day issues. That’s why I am leaving the job to cover those with the manuals (which, BTW, covers the topic very well). use &lt;em&gt;$ man proc&lt;/em&gt; to get a complete explanation on what information each file can give you and &lt;em&gt;$ man /proc/filename&lt;/em&gt; for more information about a specific file.&lt;/p&gt;
 </description>
         <pubDate>Mon, 15 Jul 2013 00:00:00 -0300</pubDate>
-        <link>http://yourdomain.com/linux/processes/2013/07/15/the-proc-filesystem.html</link>
-        <guid isPermaLink="true">http://yourdomain.com/linux/processes/2013/07/15/the-proc-filesystem.html</guid>
+        <link>http://flaviamissi.github.io/http://flaviamissi.github.io//linux/processes/2013/07/15/the-proc-filesystem.html</link>
+        <guid isPermaLink="true">http://flaviamissi.github.io/http://flaviamissi.github.io//linux/processes/2013/07/15/the-proc-filesystem.html</guid>
         
         
         <category>linux</category>
         
         <category>processes</category>
+        
+      </item>
+    
+      <item>
+        <title>Testing a webserver written in Go</title>
+        <description>&lt;p&gt;I’ve been recently working on an api that needed to be super fast and made async calls to Canonical’s Juju. For this job, my team and I choosed to use &lt;a href=&quot;http://golang.org/&quot;&gt;Golang&lt;/a&gt;, wich’s aim is to be fast and easy to learn.&lt;/p&gt;
+
+&lt;p&gt;We’ve found some difficulty searching for samples of how to test the api handlers that we wrote, reading Juju’s source code I found some tests that started a test webserver and used it to make the requests. Based on that sample, I made some very clear tests, on top of some handlers that I wrote for that porpose.&lt;/p&gt;
+
+&lt;p&gt;Those tests served as a base for all Tsuru’s api tests, that you can find here: &lt;a href=&quot;http://github.com/globocom/tsuru&quot;&gt;http://github.com/globocom/tsuru&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The original base tests can be found here: &lt;a href=&quot;https://github.com/flaviamissi/go-webserver-sample/blob/master/handlers/handlers_test.go&quot;&gt;https://github.com/flaviamissi/go-webserver-sample/blob/master/handlers/handlers_test.go&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Hope it helps ;)&lt;/p&gt;
+</description>
+        <pubDate>Mon, 21 May 2012 00:00:00 -0300</pubDate>
+        <link>http://flaviamissi.github.io/http://flaviamissi.github.io//golang/tsuru/webservers/tests/2012/05/21/testing-a-webserver-written-in-go.html</link>
+        <guid isPermaLink="true">http://flaviamissi.github.io/http://flaviamissi.github.io//golang/tsuru/webservers/tests/2012/05/21/testing-a-webserver-written-in-go.html</guid>
+        
+        
+        <category>golang</category>
+        
+        <category>tsuru</category>
+        
+        <category>webservers</category>
+        
+        <category>tests</category>
         
       </item>
     

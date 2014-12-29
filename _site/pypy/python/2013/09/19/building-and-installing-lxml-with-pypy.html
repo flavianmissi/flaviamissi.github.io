@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width initial-scale=1" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>About</title>
+    <title>Building and installing lxml with PyPy</title>
     <meta name="description" content="Passionate developer, cloud and devops enthusiast, trying to improve my skills on both operation and development. Any tips are welcome :)
 ">
 
     <link rel="stylesheet" href="http://flaviamissi.github.io//css/main.css">
-    <link rel="canonical" href="http://flaviamissi.github.io/http://flaviamissi.github.io//about/">
+    <link rel="canonical" href="http://flaviamissi.github.io/http://flaviamissi.github.io//pypy/python/2013/09/19/building-and-installing-lxml-with-pypy.html">
 </head>
 
 
@@ -57,14 +57,46 @@
         <div class="post">
 
   <header class="post-header">
-    <h1 class="post-title">About</h1>
+    <h1 class="post-title">Building and installing lxml with PyPy</h1>
+    <p class="post-meta">Sep 19, 2013</p>
   </header>
 
   <article class="post-content">
-    <p>Hey!
-I’m a CS self study seeking the right place to get a BS.
-This blog is my space to talk about technologies I meet during my development journey.
-Through it I’ll try to teach everyone what I learn with daily experience and/or self study.</p>
+    <h2 id="introduction">Introduction</h2>
+<p>The major issue my colleagues and I found when we started running some projects with <a href="http://pypy.org/">PyPy</a> was the
+<a href="https://pypi.python.org/pypi/lxml/3.2.3">lxml</a> library. It uses <a href="http://docs.cython.org/src/quickstart/overview.html">Cython</a>,
+which can run with PyPy if you write your code <a href="http://docs.cython.org/src/userguide/pypy.html">portably enough</a>.
+So an effort began to port lxml to use <a href="https://cffi.readthedocs.org/en/release-0.7/">CFFI</a>. This effort can be found
+on <a href="https://github.com/amauryfa/lxml">this fork</a> and this is the code we’re going to install from.</p>
+
+<h2 id="resolving-dependencies">Resolving dependencies</h2>
+
+<p>We are going to install lxml on a ubuntu 13.04, be warned that installation in OSX might give you serious headaches (&lt;10.8). Start by running the following apt-get:</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>sudo apt-get install libxml2 libxslt1-dev zlib1g-dev</code></pre></div>
+
+<p>These packages are needed to build lxml (with Python or PyPy).</p>
+
+<h2 id="bootstraping-your-environment">Bootstraping your environment</h2>
+
+<p>You’ll need to have PyPy’s binary to build lxml with, you can folow Andrews Medina’s guide to install it (but it’s in portuguese…)</p>
+
+<p>Assuming you have it installed let’s create a virtual environment (with virtualenv and virtualenvwrapper) to install lxml in:</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>mkvirtualenv lxml-pypy -p /path/to/pypy/bin/pypy</code></pre></div>
+
+<p>Now clone the lxml fork and checkout to the CFFI branch:</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>git clone https://github.com/amauryfa/lxml.git
+<span class="nv">$ </span><span class="nb">cd </span>lxml
+<span class="nv">$ </span>git checkout origin/cffi</code></pre></div>
+
+<p>Now build and install (double check if you’re in the right virtual environment):</p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span>python setup.py build
+<span class="nv">$ </span>python setup.py install</code></pre></div>
+
+<p>Done!</p>
 
   </article>
 
