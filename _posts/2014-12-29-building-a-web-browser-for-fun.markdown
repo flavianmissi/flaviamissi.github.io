@@ -25,7 +25,7 @@ read the [libcurl tutorial](http://curl.haxx.se/libcurl/c/libcurl-tutorial.html)
 
 Perform a request:
 
-```c++
+```
 curl_global_init(CURL_GLOBAL_ALL);
 
 CURL *handle = curl_easy_init();
@@ -65,7 +65,7 @@ This is the hardest part of the job. A simple search into google returns various
 the opposite, I'm going to use my own approach here.
 Starting simple, let's colour all links to blue:
 
-```C++
+```
 std::string blue = "\33\[34m";
 std::size_t pos = html.find("<a>");
 if (pos != std::string::npos) {
@@ -78,7 +78,7 @@ if (pos != std::string::npos) {
 This is a very simple case that just works when the tag has no attributes, not very useful huh?
 We need to generalize this, so let's create a map to keep all tags and its closing tags too.
 
-```C++
+```
 std::map<std::string,std::string> html_tags = {
     {"<!DOCTYPE", ""},
     {"<!doctype", ""},
@@ -116,7 +116,7 @@ std::map<std::string,std::string> html_tags = {
 
 Now we need to know what to replace those tags with, let's use another map for that:
 
-```C++
+```
 std::map<std::string,std::string> conversion_map = {
     {"<title", "\33\[37m\n"},
     {"<a", "\33\[34m"},
@@ -142,7 +142,7 @@ It's worth noting that this is C++11 syntax, make sure you're compiling your fil
 
 Now to the task:
 
-```C++
+```
 std::string HTMLToANSI(std::string html) {
     std::map<std::string,std::string>::iterator it;
     std::size_t pos;
@@ -183,7 +183,7 @@ Now that we have replaced the whole tags with our escape sequences, we need to r
 like `<style>` and `<script>`.
 So before the program replaces the HTML tags we must remove the contents of those tags:
 
-```C++
+```
 std::string removeTagsContent(std::string html) {
     std::map<std::string,std::string>::iterator it;
     std::string opening_tag;
@@ -206,7 +206,7 @@ std::string removeTagsContent(std::string html) {
 After replacing everything, there're lots of new lines and useless whitespaces as leftovers from the formatting,
 to fix that I built a simple function:
 
-```C++
+```
 std::string improveFormatting(std::string html) {
     std::size_t pos;
     std::string token = "  ";
@@ -230,7 +230,7 @@ std::string improveFormatting(std::string html) {
 
 Now that everything has been dealt with, to run the program from [my repository](https://github.com/flaviamissi/webbrowser-experiment):
 
-```shell
+```
 $ make run url=<your-url.com>
 ```
 
