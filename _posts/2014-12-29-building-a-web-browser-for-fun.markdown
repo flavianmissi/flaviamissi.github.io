@@ -10,11 +10,10 @@ First things first, let's list some basic browsing features:
 
     - get content of webpages given a url using HTTP or HTTPS
     - interpret front-end stack, html, css, javascript..
-    - is that all?
 
 
 We're going to do this in C++ so things get a little more exciting. Let's have a look
-at C++'s http[s] built-in lib: a quick google search showed lots of opensource implementations
+at C++'s http[s] libs: a quick google search showed lots of opensource implementations
 of HTTP clients to C++, but a lot of people also seem to like to simply use libcURL for the job.
 That'll be our choice for now.
 
@@ -55,7 +54,7 @@ Google and Apple to build their own engines.
 
 I could've also used [Apple WebKit](http://en.wikipedia.org/wiki/WebKit) (Safari) or
 [Blink](http://en.wikipedia.org/wiki/Blink_(layout_engine)) (Google, Opera, etc), but they also solve all of my
-problems, giving my almost nothing else to do.
+problems, giving me almost nothing else to do.
 
 ###Translating the HTML to ANSI escape sequences
 

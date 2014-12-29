@@ -66,11 +66,10 @@
 
 <pre><code>- get content of webpages given a url using HTTP or HTTPS
 - interpret front-end stack, html, css, javascript..
-- is that all?
 </code></pre>
 
 <p>We’re going to do this in C++ so things get a little more exciting. Let’s have a look
-at C++’s http[s] built-in lib: a quick google search showed lots of opensource implementations
+at C++’s http[s] libs: a quick google search showed lots of opensource implementations
 of HTTP clients to C++, but a lot of people also seem to like to simply use libcURL for the job.
 That’ll be our choice for now.</p>
 
@@ -112,7 +111,7 @@ Google and Apple to build their own engines.</p>
 
 <p>I could’ve also used <a href="http://en.wikipedia.org/wiki/WebKit">Apple WebKit</a> (Safari) or
 <a href="http://en.wikipedia.org/wiki/Blink_(layout_engine)">Blink</a> (Google, Opera, etc), but they also solve all of my
-problems, giving my almost nothing else to do.</p>
+problems, giving me almost nothing else to do.</p>
 
 <h3 id="translating-the-html-to-ansi-escape-sequences">Translating the HTML to ANSI escape sequences</h3>
 
