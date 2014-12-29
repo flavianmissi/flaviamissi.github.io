@@ -81,7 +81,7 @@ read the <a href="http://curl.haxx.se/libcurl/c/libcurl-tutorial.html">libcurl t
 
 <p>Perform a request:</p>
 
-<p>```c++
+<p>```
 curl_global_init(CURL_GLOBAL_ALL);</p>
 
 <p>CURL *handle = curl_easy_init();</p>
@@ -122,7 +122,7 @@ problems, giving my almost nothing else to do.</p>
 the opposite, I’m going to use my own approach here.
 Starting simple, let’s colour all links to blue:</p>
 
-<p><code>C++
+<p><code>
 std::string blue = "\33\[34m";
 std::size_t pos = html.find("&lt;a&gt;");
 if (pos != std::string::npos) {
@@ -135,7 +135,7 @@ if (pos != std::string::npos) {
 <p>This is a very simple case that just works when the tag has no attributes, not very useful huh?
 We need to generalize this, so let’s create a map to keep all tags and its closing tags too.</p>
 
-<p><code>C++
+<p><code>
 std::map&lt;std::string,std::string&gt; html_tags = {
     {"&lt;!DOCTYPE", ""},
     {"&lt;!doctype", ""},
@@ -173,7 +173,7 @@ std::map&lt;std::string,std::string&gt; html_tags = {
 
 <p>Now we need to know what to replace those tags with, let’s use another map for that:</p>
 
-<p><code>C++
+<p><code>
 std::map&lt;std::string,std::string&gt; conversion_map = {
     {"&lt;title", "\33\[37m\n"},
     {"&lt;a", "\33\[34m"},
@@ -199,7 +199,7 @@ std::map&lt;std::string,std::string&gt; conversion_map = {
 
 <p>Now to the task:</p>
 
-<p>```C++
+<p>```
 std::string HTMLToANSI(std::string html) {
     std::map&lt;std::string,std::string&gt;::iterator it;
     std::size_t pos;
@@ -238,7 +238,7 @@ return improveFormatting(html); } ```
 like <code>&lt;style&gt;</code> and <code>&lt;script&gt;</code>.
 So before the program replaces the HTML tags we must remove the contents of those tags:</p>
 
-<p>```C++
+<p>```
 std::string removeTagsContent(std::string html) {
     std::map&lt;std::string,std::string&gt;::iterator it;
     std::string opening_tag;
@@ -260,7 +260,7 @@ return html; } ```
 <p>After replacing everything, there’re lots of new lines and useless whitespaces as leftovers from the formatting,
 to fix that I built a simple function:</p>
 
-<p>```C++
+<p>```
 std::string improveFormatting(std::string html) {
     std::size_t pos;
     std::string token = “  “;
@@ -283,7 +283,7 @@ return html; } ```
 
 <p>Now that everything has been dealt with, to run the program from <a href="https://github.com/flaviamissi/webbrowser-experiment">my repository</a>:</p>
 
-<p><code>shell
+<p><code>
 $ make run url=&lt;your-url.com&gt;
 </code></p>
 

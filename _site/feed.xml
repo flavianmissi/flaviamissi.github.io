@@ -6,8 +6,8 @@
 </description>
     <link>http://flaviamissi.github.io/http://flaviamissi.github.io//</link>
     <atom:link href="http://flaviamissi.github.io/http://flaviamissi.github.io//feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Mon, 29 Dec 2014 20:45:53 -0200</pubDate>
-    <lastBuildDate>Mon, 29 Dec 2014 20:45:53 -0200</lastBuildDate>
+    <pubDate>Mon, 29 Dec 2014 20:50:33 -0200</pubDate>
+    <lastBuildDate>Mon, 29 Dec 2014 20:50:33 -0200</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
     
       <item>
@@ -31,7 +31,7 @@ read the &lt;a href=&quot;http://curl.haxx.se/libcurl/c/libcurl-tutorial.html&qu
 
 &lt;p&gt;Perform a request:&lt;/p&gt;
 
-&lt;p&gt;```c++
+&lt;p&gt;```
 curl_global_init(CURL_GLOBAL_ALL);&lt;/p&gt;
 
 &lt;p&gt;CURL *handle = curl_easy_init();&lt;/p&gt;
@@ -72,7 +72,7 @@ problems, giving my almost nothing else to do.&lt;/p&gt;
 the opposite, I’m going to use my own approach here.
 Starting simple, let’s colour all links to blue:&lt;/p&gt;
 
-&lt;p&gt;&lt;code&gt;C++
+&lt;p&gt;&lt;code&gt;
 std::string blue = &quot;\33\[34m&quot;;
 std::size_t pos = html.find(&quot;&amp;lt;a&amp;gt;&quot;);
 if (pos != std::string::npos) {
@@ -85,7 +85,7 @@ if (pos != std::string::npos) {
 &lt;p&gt;This is a very simple case that just works when the tag has no attributes, not very useful huh?
 We need to generalize this, so let’s create a map to keep all tags and its closing tags too.&lt;/p&gt;
 
-&lt;p&gt;&lt;code&gt;C++
+&lt;p&gt;&lt;code&gt;
 std::map&amp;lt;std::string,std::string&amp;gt; html_tags = {
     {&quot;&amp;lt;!DOCTYPE&quot;, &quot;&quot;},
     {&quot;&amp;lt;!doctype&quot;, &quot;&quot;},
@@ -123,7 +123,7 @@ std::map&amp;lt;std::string,std::string&amp;gt; html_tags = {
 
 &lt;p&gt;Now we need to know what to replace those tags with, let’s use another map for that:&lt;/p&gt;
 
-&lt;p&gt;&lt;code&gt;C++
+&lt;p&gt;&lt;code&gt;
 std::map&amp;lt;std::string,std::string&amp;gt; conversion_map = {
     {&quot;&amp;lt;title&quot;, &quot;\33\[37m\n&quot;},
     {&quot;&amp;lt;a&quot;, &quot;\33\[34m&quot;},
@@ -149,7 +149,7 @@ std::map&amp;lt;std::string,std::string&amp;gt; conversion_map = {
 
 &lt;p&gt;Now to the task:&lt;/p&gt;
 
-&lt;p&gt;```C++
+&lt;p&gt;```
 std::string HTMLToANSI(std::string html) {
     std::map&amp;lt;std::string,std::string&amp;gt;::iterator it;
     std::size_t pos;
@@ -188,7 +188,7 @@ return improveFormatting(html); } ```
 like &lt;code&gt;&amp;lt;style&amp;gt;&lt;/code&gt; and &lt;code&gt;&amp;lt;script&amp;gt;&lt;/code&gt;.
 So before the program replaces the HTML tags we must remove the contents of those tags:&lt;/p&gt;
 
-&lt;p&gt;```C++
+&lt;p&gt;```
 std::string removeTagsContent(std::string html) {
     std::map&amp;lt;std::string,std::string&amp;gt;::iterator it;
     std::string opening_tag;
@@ -210,7 +210,7 @@ return html; } ```
 &lt;p&gt;After replacing everything, there’re lots of new lines and useless whitespaces as leftovers from the formatting,
 to fix that I built a simple function:&lt;/p&gt;
 
-&lt;p&gt;```C++
+&lt;p&gt;```
 std::string improveFormatting(std::string html) {
     std::size_t pos;
     std::string token = “  “;
@@ -233,7 +233,7 @@ return html; } ```
 
 &lt;p&gt;Now that everything has been dealt with, to run the program from &lt;a href=&quot;https://github.com/flaviamissi/webbrowser-experiment&quot;&gt;my repository&lt;/a&gt;:&lt;/p&gt;
 
-&lt;p&gt;&lt;code&gt;shell
+&lt;p&gt;&lt;code&gt;
 $ make run url=&amp;lt;your-url.com&amp;gt;
 &lt;/code&gt;&lt;/p&gt;
 
