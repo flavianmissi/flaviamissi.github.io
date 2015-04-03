@@ -40,7 +40,7 @@ Not caring about the future at all, let's exercise the possible implementations.
 What should we choose?
 I won't tell you :P
 
-No. Really, I won't. Instead we're going to figure it out by going through the testing process, using our imaginations.
+No, really, I won't. Instead we're going to figure it out by going through the testing process, using our imagination.
 
 As I said before, the first thing you should always do is write a test.
 
@@ -86,4 +86,4 @@ is to do a coding Dojo with a recursive problem. I recommend the [Word Wrapping]
 the [Uncle Bob Martin article](http://thecleancoder.blogspot.nl/2010/10/craftsman-62-dark-path.html) about it. This was one of the things that opened my eyes a little more about TDD.
 
 If you made it down here, thanks for the patience. I still don't have comments enabled, but as the git user I bet you are you
-can comment on the [source code of this post](https://github.com/flaviamissi/flaviamissi.github.io/blob/master/_posts/2015-04-03-why-i-love-tdd.markdown) :)
+can comment on the [source code of this post](https://github.com/flaviamissi/flaviamissi.github.io/commit/c68d127b07ba30444025fd0474a7ee14cb199eab) :)
