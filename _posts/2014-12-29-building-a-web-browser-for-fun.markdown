@@ -2,6 +2,7 @@
 layout: post
 title:  "Building a web browser for fun"
 date:   2014-12-29
+comments: True
 categories: c++ libcurl
 ---
 

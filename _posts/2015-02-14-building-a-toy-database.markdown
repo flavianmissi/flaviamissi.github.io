@@ -2,6 +2,7 @@
 layout: post
 title:  "Building a toy database"
 date:   2013-9-19
+comments: True
 categories: C++
 ---
 

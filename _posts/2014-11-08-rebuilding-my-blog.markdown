@@ -2,6 +2,7 @@
 layout: post
 title:  "Rebuilding my blog"
 date:   2013-9-19
+comments: True
 categories: uncategorized
 ---
 As some may observe, I removed some of my oldest posts. That's because they were written in portuguese, and

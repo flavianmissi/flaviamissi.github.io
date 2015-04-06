@@ -2,6 +2,7 @@
 layout: post
 title:  "The proc filesystem"
 date:   2013-7-15
+comments: True
 categories: linux processes
 ---
 

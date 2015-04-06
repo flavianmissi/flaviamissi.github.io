@@ -2,6 +2,7 @@
 layout: post
 title:  "Why I love TDD"
 date:   2015-04-03
+comments: True
 categories: TDD testing
 ---
 

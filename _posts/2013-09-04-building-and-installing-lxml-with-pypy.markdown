@@ -2,6 +2,7 @@
 layout: post
 title:  "Building and installing lxml with PyPy"
 date:   2013-9-19
+comments: True
 categories: pypy python
 ---
 ## Introduction

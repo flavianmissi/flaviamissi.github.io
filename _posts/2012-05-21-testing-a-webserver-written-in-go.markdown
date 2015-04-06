@@ -2,6 +2,7 @@
 layout: post
 title:  "Testing a webserver written in Go"
 date:   2012-05-21
+comments: True
 categories: golang tsuru webservers tests
 ---
 I’ve been recently working on an api that needed to be super fast and made async calls to Canonical’s Juju. For this job, my team and I choosed to use [Golang](http://golang.org/), wich’s aim is to be fast and easy to learn.
