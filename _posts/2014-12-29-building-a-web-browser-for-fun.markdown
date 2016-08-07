@@ -29,7 +29,7 @@ Perform a request:
 
     CURL *handle = curl_easy_init();
 
-    curl_easy_setopt(handle, CURLOPT_URL, "http://flaviamissi.com.br");
+    curl_easy_setopt(handle, CURLOPT_URL, "http://flavia.sh");
     curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, 1L);
 
     CURLcode resp = curl_easy_perform(handle);

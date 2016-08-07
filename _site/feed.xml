@@ -4,8 +4,8 @@
     <title>Flavia Missi&#39;s blog</title>
     <description>Passionate developer, cloud and devops enthusiast, trying to improve my skills on both operation and development. Any tips are welcome :)
 </description>
-    <link>http://flaviamissi.com.br/</link>
-    <atom:link href="http://flaviamissi.com.br/feed.xml" rel="self" type="application/rss+xml" />
+    <link>http://flavia.sh/</link>
+    <atom:link href="http://flavia.sh/feed.xml" rel="self" type="application/rss+xml" />
     <pubDate>Sun, 19 Apr 2015 16:50:45 -0300</pubDate>
     <lastBuildDate>Sun, 19 Apr 2015 16:50:45 -0300</lastBuildDate>
     <generator>Jekyll v2.4.0</generator>
@@ -18,7 +18,7 @@
 
 &lt;p&gt;It comes from eXtreme programming set of techniques and its the core of its practice, as the image below shows.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;http://flaviamissi.com.br/images/xp-cycle.jpg&quot; alt=&quot;alt text&quot; title=&quot;eXtreme programming cycle&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://flavia.sh/images/xp-cycle.jpg&quot; alt=&quot;alt text&quot; title=&quot;eXtreme programming cycle&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;TDD has a lot of benefits, in this post I’ll show you the most impactant of them in my opinion.&lt;/p&gt;
 
@@ -29,8 +29,8 @@
 &lt;h2 id=&quot;whats-next&quot;&gt;What’s next?&lt;/h2&gt;
 </description>
         <pubDate>Sun, 19 Apr 2015 00:00:00 -0300</pubDate>
-        <link>http://flaviamissi.com.br/tdd/testing/2015/04/19/why-i-love-tdd-pt2.html</link>
-        <guid isPermaLink="true">http://flaviamissi.com.br/tdd/testing/2015/04/19/why-i-love-tdd-pt2.html</guid>
+        <link>http://flavia.sh/tdd/testing/2015/04/19/why-i-love-tdd-pt2.html</link>
+        <guid isPermaLink="true">http://flavia.sh/tdd/testing/2015/04/19/why-i-love-tdd-pt2.html</guid>
         
         
         <category>tdd</category>
@@ -123,8 +123,8 @@ the &lt;a href=&quot;http://thecleancoder.blogspot.nl/2010/10/craftsman-62-dark-
 can comment on the &lt;a href=&quot;https://github.com/flaviamissi/flaviamissi.github.io/commit/c68d127b07ba30444025fd0474a7ee14cb199eab&quot;&gt;source code of this post&lt;/a&gt; :)&lt;/p&gt;
 </description>
         <pubDate>Fri, 03 Apr 2015 00:00:00 -0300</pubDate>
-        <link>http://flaviamissi.com.br/tdd/testing/2015/04/03/why-i-love-tdd.html</link>
-        <guid isPermaLink="true">http://flaviamissi.com.br/tdd/testing/2015/04/03/why-i-love-tdd.html</guid>
+        <link>http://flavia.sh/tdd/testing/2015/04/03/why-i-love-tdd.html</link>
+        <guid isPermaLink="true">http://flavia.sh/tdd/testing/2015/04/03/why-i-love-tdd.html</guid>
         
         
         <category>tdd</category>
@@ -157,7 +157,7 @@ read the &lt;a href=&quot;http://curl.haxx.se/libcurl/c/libcurl-tutorial.html&qu
 
 CURL *handle = curl_easy_init();
 
-curl_easy_setopt(handle, CURLOPT_URL, &quot;http://flaviamissi.com.br&quot;);
+curl_easy_setopt(handle, CURLOPT_URL, &quot;http://flavia.sh&quot;);
 curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, 1L);
 
 CURLcode resp = curl_easy_perform(handle);
@@ -356,8 +356,8 @@ to fix that I built a simple function:&lt;/p&gt;
 &lt;p&gt;Take a look at the code and comment on github if there’s anything else you need to know.&lt;/p&gt;
 </description>
         <pubDate>Mon, 29 Dec 2014 00:00:00 -0200</pubDate>
-        <link>http://flaviamissi.com.br/c++/libcurl/2014/12/29/building-a-web-browser-for-fun.html</link>
-        <guid isPermaLink="true">http://flaviamissi.com.br/c++/libcurl/2014/12/29/building-a-web-browser-for-fun.html</guid>
+        <link>http://flavia.sh/c++/libcurl/2014/12/29/building-a-web-browser-for-fun.html</link>
+        <guid isPermaLink="true">http://flavia.sh/c++/libcurl/2014/12/29/building-a-web-browser-for-fun.html</guid>
         
         
         <category>c++</category>
@@ -377,8 +377,8 @@ as a software engineer and think they’re not as valuable as the ones in here.&
 &lt;p&gt;Thanks for reading.&lt;/p&gt;
 </description>
         <pubDate>Thu, 19 Sep 2013 00:00:00 -0300</pubDate>
-        <link>http://flaviamissi.com.br/uncategorized/2013/09/19/rebuilding-my-blog.html</link>
-        <guid isPermaLink="true">http://flaviamissi.com.br/uncategorized/2013/09/19/rebuilding-my-blog.html</guid>
+        <link>http://flavia.sh/uncategorized/2013/09/19/rebuilding-my-blog.html</link>
+        <guid isPermaLink="true">http://flavia.sh/uncategorized/2013/09/19/rebuilding-my-blog.html</guid>
         
         
         <category>uncategorized</category>
@@ -424,8 +424,8 @@ on &lt;a href=&quot;https://github.com/amauryfa/lxml&quot;&gt;this fork&lt;/a&gt
 &lt;p&gt;Done!&lt;/p&gt;
 </description>
         <pubDate>Thu, 19 Sep 2013 00:00:00 -0300</pubDate>
-        <link>http://flaviamissi.com.br/pypy/python/2013/09/19/building-and-installing-lxml-with-pypy.html</link>
-        <guid isPermaLink="true">http://flaviamissi.com.br/pypy/python/2013/09/19/building-and-installing-lxml-with-pypy.html</guid>
+        <link>http://flavia.sh/pypy/python/2013/09/19/building-and-installing-lxml-with-pypy.html</link>
+        <guid isPermaLink="true">http://flavia.sh/pypy/python/2013/09/19/building-and-installing-lxml-with-pypy.html</guid>
         
         
         <category>pypy</category>
@@ -474,8 +474,8 @@ my_table[col_1, col_2, col_3] = {[(row 1 col 1 in table my_table), (row 1 col 2 
 
 </description>
         <pubDate>Thu, 19 Sep 2013 00:00:00 -0300</pubDate>
-        <link>http://flaviamissi.com.br/c++/2013/09/19/building-a-toy-database.html</link>
-        <guid isPermaLink="true">http://flaviamissi.com.br/c++/2013/09/19/building-a-toy-database.html</guid>
+        <link>http://flavia.sh/c++/2013/09/19/building-a-toy-database.html</link>
+        <guid isPermaLink="true">http://flavia.sh/c++/2013/09/19/building-a-toy-database.html</guid>
         
         
         <category>c++</category>
@@ -624,8 +624,8 @@ dr-xr-xr-x  &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; root    root   attr&l
 &lt;p&gt;Also, as you might have noticed I simply didn’t addressed the files right under &lt;em&gt;/proc&lt;/em&gt;. That’s because I see the information they carry as more important than the former – this is because of my programming background and day-to-day issues. That’s why I am leaving the job to cover those with the manuals (which, BTW, covers the topic very well). use &lt;em&gt;$ man proc&lt;/em&gt; to get a complete explanation on what information each file can give you and &lt;em&gt;$ man /proc/filename&lt;/em&gt; for more information about a specific file.&lt;/p&gt;
 </description>
         <pubDate>Mon, 15 Jul 2013 00:00:00 -0300</pubDate>
-        <link>http://flaviamissi.com.br/linux/processes/2013/07/15/the-proc-filesystem.html</link>
-        <guid isPermaLink="true">http://flaviamissi.com.br/linux/processes/2013/07/15/the-proc-filesystem.html</guid>
+        <link>http://flavia.sh/linux/processes/2013/07/15/the-proc-filesystem.html</link>
+        <guid isPermaLink="true">http://flavia.sh/linux/processes/2013/07/15/the-proc-filesystem.html</guid>
         
         
         <category>linux</category>
@@ -647,8 +647,8 @@ dr-xr-xr-x  &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; root    root   attr&l
 &lt;p&gt;Hope it helps ;)&lt;/p&gt;
 </description>
         <pubDate>Mon, 21 May 2012 00:00:00 -0300</pubDate>
-        <link>http://flaviamissi.com.br/golang/tsuru/webservers/tests/2012/05/21/testing-a-webserver-written-in-go.html</link>
-        <guid isPermaLink="true">http://flaviamissi.com.br/golang/tsuru/webservers/tests/2012/05/21/testing-a-webserver-written-in-go.html</guid>
+        <link>http://flavia.sh/golang/tsuru/webservers/tests/2012/05/21/testing-a-webserver-written-in-go.html</link>
+        <guid isPermaLink="true">http://flavia.sh/golang/tsuru/webservers/tests/2012/05/21/testing-a-webserver-written-in-go.html</guid>
         
         
         <category>golang</category>
